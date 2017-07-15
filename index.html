@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>STEAM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/md5.js" ></script>
+  <script src="./data.js" ></script>
+  <style type="text/css">
+    .chipsdemoContactChips md-content.autocomplete{min-height:250px}.chipsdemoContactChips md-content.autocomplete input{min-width:400px}.chipsdemoContactChips .md-item-text.compact{padding-top:8px;padding-bottom:8px}.chipsdemoContactChips .contact-item{box-sizing:border-box}.chipsdemoContactChips .contact-item.selected,.chipsdemoContactChips .contact-item.selected h3{opacity:.5}.chipsdemoContactChips .contact-item .md-list-item-text{padding:14px 0;max-width:190px}.chipsdemoContactChips .contact-item .md-list-item-text h3{margin:0!important;padding:0;line-height:1.2em!important}.chipsdemoContactChips .contact-item .md-list-item-text h3,.chipsdemoContactChips .contact-item .md-list-item-text p{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}@media (min-width:960px){.chipsdemoContactChips .contact-item{float:left;width:33%}}.chipsdemoContactChips md-contact-chips{margin-bottom:10px}.chipsdemoContactChips .md-chips{padding:5px 0 8px}.chipsdemoContactChips .fixedRows{height:250px;overflow:hidden}
+    .m-50{
+      margin-left: 15%;
+      margin-right: 15%;
+    }
+    .pad-10{
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    
+  </style>
+
+</head>
+<body ng-app="contactChipsDemo" ng-cloak>
+<div ng-controller="ContactChipDemoCtrl as ctrl" layout="column" ng-cloak>
+
+<form ng-submit="filterOutJson">
+
+ <md-toolbar class="md-accent">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="Settings"></md-button>
+      <h2>Let's DIY</h2>
+      <span flex></span>
+      <md-button
+        class="md-icon-button"
+        aria-label="Favorite"
+        ng-click="ctrl.showToolbarMenu($event, ctrl.favorite)">
+      </md-button>
+     
+    </div>
+  </md-toolbar>
+
+  <md-content class="md-padding autocomplete m-50" layout="column">
+
+    <md-contact-chips
+        ng-model="ctrl.contacts"
+        md-contacts="ctrl.querySearch($query)"
+        md-contact-name="name"
+        md-contact-email="email"
+        md-require-match="true"
+        md-highlight-flags="i"
+        filter-selected="ctrl.filterSelected"
+        placeholder="Try 'Paper' or 'Bottle..'">
+    </md-contact-chips>
+    <div align="center">
+      <br>
+     <md-button  class="w50 pad-10   md-raised md-primary md-hue-2" aria-label="Eat cake">
+            What can we do with these ?
+        </md-button>
+    </div>
+    <hr>
+    <div ng-if="pendingSearch" layout="row" layout-sm="column" layout-align="space-around">
+      <md-progress-circular class="md-warn" md-mode="indeterminate"></md-progress-circular>
+    </div>
+    <!-- <md-list class="fixedRows">
+      <md-subheader class="md-no-sticky">Contacts</md-subheader>
+      <md-list-item class="md-2-line contact-item" ng-repeat="(index, contact) in ctrl.allContacts"
+          ng-if="ctrl.contacts.indexOf(contact) < 0">
+        <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" />
+        <div class="md-list-item-text compact">
+          <h3>{{contact.name}}</h3>
+          <p>{{contact.email}}</p>
+        </div>
+      </md-list-item>
+      <md-list-item class="md-2-line contact-item selected" ng-repeat="(index, contact) in ctrl.contacts">
+        <img ng-src="{{contact.image}}" class="md-avatar" alt="{{contact.name}}" />
+        <div class="md-list-item-text compact">
+          <h3>{{contact.name}}</h3>
+          <p>{{contact.email}}</p>
+        </div>
+      </md-list-item>
+    </md-list> -->
+    {{ console.log( filteredJson )}}
+
+      <md-content class="md-padding" layout-xs="column" layout="row">
+    <div flex-xs flex-gt-xs="100" layout="column">
+      <md-card  ng-repeat="(index, card) in ctrl.filteredJson track by $index">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline pad-10" >{{ card.title }}</span>
+            <span class="md-subhead pad-10" style="color: rgb(255,64,129)">Jimish Fotariya</span>
+            <span class="md-subhead pad-10">Items : <span  style="color:rgb(103, 58, 183)">{{card.items}}
+            </span></span>
+            <span class="md-subhead pad-10" style="color: black"><em>{{ card.description }} </em></span>
+            <span class="md-subhead pad-10">
+            Time Required <strong>{{ card.time }}</strong>
+            </span>
+
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="mcard-media" >
+              <img  width="270" ng-src="{{card.youtube_url}}" frameborder="  0" allowfullscreen />
+            </div>
+          </md-card-title-media>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center" >
+          <md-button style="color: rgb(244, 67, 54);">Watch Video </md-button>
+          <md-button class="pad-10 md-accent md-raised">Read Full Article</md-button>
+          <md-button class="pad-10 md-primary md-raised">Start Activity </md-button>
+        </md-card-actions>
+      </md-card>
+      </div>
+    </md-content>
+    <br>
+<!--     <h2 class="md-title">Searching asynchronously.</h2> -->
+    <!-- <md-contact-chips
+        ng-model="ctrl.asyncContacts"
+        md-contacts="ctrl.delayedQuerySearch($query)"
+        md-contact-name="name"
+        md-contact-image="image"
+        md-contact-email="email"
+        md-require-match="true"
+        md-highlight-flags="i"
+        filter-selected="ctrl.filterSelected"
+        placeholder="To">
+    </md-contact-chips> -->
+  </md-content>
+  </form>
+</div>
+ <!-- Angular Material requires Angular.js Libraries -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+
+  <!-- Angular Material Library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0/angular-material.min.js"></script>
+<script type="text/javascript" src="./app.js"></script>
+</body>
+</html>
